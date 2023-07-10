@@ -1,0 +1,17 @@
+{
+  "name": "esojam2",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "test": "ts-node src"
+  },
+  "keywords": [],
+  "author": "Gears",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^20.4.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
+  }
+}
