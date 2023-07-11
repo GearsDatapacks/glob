@@ -8,9 +8,12 @@ export type NodeType =
   | 'AssignmentExpression'
   | 'BinaryOperation'
   | 'FunctionCall'
+  | 'MemberExpression'
 
   // Literals
   | 'Number'
+  | 'Array'
+  | 'String'
   | 'Identifier';
 
 export interface Statement {
@@ -57,4 +60,20 @@ export interface NumberLiteral extends Expression {
 export interface Identifier extends Expression {
   type: 'Identifier';
   value: string;
+}
+
+export interface StringLiteral extends Expression {
+  type: 'String';
+  value: string;
+}
+
+export interface ArrayLiteral extends Expression {
+  type: 'Array';
+  elements: Expression[];
+}
+
+export interface MemberExpression extends Expression {
+  type: 'MemberExpression';
+  object: Expression;
+  property: Expression;
 }

@@ -1,7 +1,7 @@
 import { LanguageError, ParseError, SyntaxError } from "../errors";
 import tokenise from "../lexer"
 import { Token, TokenType } from "../lexer/types"
-import { AssignmentExpression, BinaryOperation, Expression, FunctionDeclaration, Identifier, IfStatement, NumberLiteral, Program, Statement } from "./ast";
+import { ArrayLiteral, AssignmentExpression, BinaryOperation, Expression, FunctionDeclaration, Identifier, IfStatement, MemberExpression, NumberLiteral, Program, Statement, StringLiteral } from "./ast";
 
 export default class Parser {
   private tokens: Token[] = []
@@ -132,11 +132,11 @@ export default class Parser {
   }
 
   private parseMultiplicativeExpression(): Expression {
-    let left = this.parseLiteral();
+    let left = this.parseMemberExpression();
 
     while (this.next().value === '*' || this.next().value === '/' || this.next().value === '%') {
       const operator = this.consume().value;
-      const right = this.parseLiteral();
+      const right = this.parseMemberExpression();
       left = {
         type: 'BinaryOperation',
         left,
@@ -148,6 +148,29 @@ export default class Parser {
     return left;
   }
 
+  private parseMemberExpression(): Expression {
+    let object = this.parseLiteral();
+
+    while (this.next().type === TokenType.LeftSquare) {
+      this.consume();
+
+      const property = this.parseExpression();
+
+      this.expect(
+        TokenType.RightSquare,
+        token => new SyntaxError(`Expected closing bracket after member expression, got ${token}`)
+      );
+
+      object = {
+        type: 'MemberExpression',
+        object,
+        property,
+      } as MemberExpression;
+    }
+
+    return object;
+  }
+
   // Orders of precedence
   
   // Assignment
@@ -156,9 +179,40 @@ export default class Parser {
   // Addition/Subtraction
   // Multiplication/Division
   // Member access
-  // FunctionCall
   // Unary operation
   // Literal
+
+  private parseArray (): Expression {
+    this.consume();
+
+    const elements: Expression[] = [];
+
+    if (this.next().type === TokenType.RightSquare) {
+      this.consume();
+
+      return {
+        type: 'Array',
+        elements: [],
+      } as ArrayLiteral;
+    }
+
+    elements.push(this.parseExpression());
+
+    while (this.next().type === TokenType.Comma) {
+      this.consume();
+      elements.push(this.parseExpression());
+    }
+
+    this.expect(
+      TokenType.RightSquare,
+      token => new SyntaxError(`Expected closing bracket after array, got ${token}`)
+    );
+
+    return {
+      type: 'Array',
+      elements,
+    } as ArrayLiteral;
+  }
 
   private parseLiteral (): Expression {
     switch (this.next().type) {
@@ -168,8 +222,14 @@ export default class Parser {
           value: parseFloat(this.consume().value)
         } as NumberLiteral;
       
+      case TokenType.String:
+        return { type: 'String', value: this.consume().value } as StringLiteral;
+      
       case TokenType.Identifier:
         return { type: 'Identifier', value: this.consume().value } as Identifier;
+      
+      case TokenType.LeftSquare:
+        return this.parseArray();
       
       case TokenType.LeftParen:
         this.consume();

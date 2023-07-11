@@ -1,8 +1,8 @@
 import { evaluate, getVariable, setVariable } from ".";
 import { RuntimeError, TypeError } from "../errors";
-import { AssignmentExpression, BinaryOperation, Identifier } from "../parser/ast";
+import { AssignmentExpression, BinaryOperation, Identifier, MemberExpression } from "../parser/ast";
 import { evaluateCodeBlock } from "./statements";
-import { FunctionValue, NumberValue, RuntimeValue, makeNullValue, makeNumberValue } from "./types";
+import { ArrayValue, FunctionValue, NumberValue, RuntimeValue, makeNullValue, makeNumberValue } from "./types";
 
 export function evaluateIdentifier (identifier: Identifier): RuntimeValue {
   const value = getVariable(identifier.value);
@@ -74,12 +74,48 @@ export function evaluateBinaryOperation (binOp: BinaryOperation): RuntimeValue {
 }
 
 export function evaluateAssignmentExpression (assignment: AssignmentExpression): RuntimeValue {
-  if (assignment.assignee.type !== 'Identifier') {
-    throw new TypeError(`Cannot assign to non-identifier value ${assignment.assignee.type}`);
+  if (assignment.assignee.type === 'Identifier') {
+    const name = (assignment.assignee as Identifier).value;
+    const value = evaluate(assignment.value);
+  
+    return setVariable(name, value);
   }
 
-  const name = (assignment.assignee as Identifier).value;
-  const value = evaluate(assignment.value);
+  else if (assignment.assignee.type === 'MemberExpression') {
+    const memberExpression = assignment.assignee as MemberExpression;
+    const object = evaluate(memberExpression.object);
+    const property = evaluate(memberExpression.property);
 
-  return setVariable(name, value);
+    if (object.type !== 'array') {
+      throw new TypeError(`Object of type ${object.type} is not indexable`);
+    }
+  
+    if (property.type !== 'number') {
+      throw new TypeError(`Array is not indexable with type ${property.type}`);
+    }
+
+    const value = evaluate(assignment.value);
+    (object as ArrayValue).value[(property as NumberValue).value] = value;
+
+    return value;
+  }
+
+  else {
+    throw new TypeError(`Cannot assign to non-identifier value ${assignment.assignee.type}`);
+  }
+}
+
+export function evaluateMemberExpression (memberExpression: MemberExpression): RuntimeValue {
+  const object = evaluate(memberExpression.object);
+  const property = evaluate(memberExpression.property);
+
+  if (object.type !== 'array') {
+    throw new TypeError(`Object of type ${object.type} is not indexable`);
+  }
+
+  if (property.type !== 'number') {
+    throw new TypeError(`Array is not indexable with type ${property.type}`);
+  }
+
+  return (object as ArrayValue).value[(property as NumberValue).value];
 }

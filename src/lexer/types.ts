@@ -2,7 +2,7 @@ export enum TokenType {
   EOF,
 
   // Literals
-  Number,
+  Number, String,
   Identifier,
 
   // Keywords
@@ -12,10 +12,10 @@ export enum TokenType {
   End,
 
   // Symbols
-  BinaryOperator, Equals,
+  Operator, Equals,
   LeftParen, RightParen,
   LeftSquare, RightSquare,
-  LeftBrace, RightBrace,
+  // LeftBrace, RightBrace,
   Comma,
 }
 

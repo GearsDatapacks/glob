@@ -1,31 +1,32 @@
 import { TokenType } from "./types";
 
-export const VALID_SYMBOL_CHARS = [
+export const VALID_SYMBOL_CHARS = new Set<string>([
   '+', '-', '*', '/', '%',
-  '(', ')', '{', '}', '[', ']',
+  '!',
+  '(', ')',
+  '[', ']',
    ',',
-];
+]);
 
-export const SYMBOLS: Record<string, TokenType> = {
-  '+': TokenType.BinaryOperator,
-  '-': TokenType.BinaryOperator,
-  '*': TokenType.BinaryOperator,
-  '/': TokenType.BinaryOperator,
-  '%': TokenType.BinaryOperator,
+export const SYMBOLS: Map<string, TokenType> = new Map([
+  ['+', TokenType.Operator],
+  ['-', TokenType.Operator],
+  ['*', TokenType.Operator],
+  ['/', TokenType.Operator],
+  ['%', TokenType.Operator],
+  ['!', TokenType.Operator],
 
-  '(': TokenType.LeftParen,
-  ')': TokenType.RightParen,
-  '{': TokenType.LeftBrace,
-  '}': TokenType.RightBrace,
-  '[': TokenType.LeftSquare,
-  ']': TokenType.RightSquare,
+  ['(', TokenType.LeftParen],
+  [')', TokenType.RightParen],
+  ['[', TokenType.LeftSquare],
+  [']', TokenType.RightSquare],
 
-  ',': TokenType.Comma,
-};
+  [',', TokenType.Comma],
+]);
 
-export const KEYWORDS: Record<string, TokenType> = {
-  let: TokenType.Let,
-  if: TokenType.If,
-  end: TokenType.End,
-  function: TokenType.Function,
-};
+export const KEYWORDS: Map<string, TokenType> = new Map([
+  ['let', TokenType.Let],
+  ['if', TokenType.If],
+  ['end', TokenType.End],
+  ['function', TokenType.Function],
+]);

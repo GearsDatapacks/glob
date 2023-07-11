@@ -1,8 +1,8 @@
 import { RuntimeError } from "../errors";
-import { AssignmentExpression, BinaryOperation, FunctionDeclaration, Identifier, IfStatement, NumberLiteral, Program, Statement } from "../parser/ast";
-import { evaluateAssignmentExpression, evaluateBinaryOperation, evaluateIdentifier } from "./expressions";
+import { ArrayLiteral, AssignmentExpression, BinaryOperation, FunctionDeclaration, Identifier, IfStatement, MemberExpression, NumberLiteral, Program, Statement, StringLiteral } from "../parser/ast";
+import { evaluateAssignmentExpression, evaluateBinaryOperation, evaluateIdentifier, evaluateMemberExpression } from "./expressions";
 import { evaluateFunctionDeclaration, evaluateIfStatment, evaluateProgram } from "./statements";
-import { RuntimeValue, makeNullValue, makeNumberValue } from "./types";
+import { RuntimeValue, makeArrayValue, makeNullValue, makeNumberValue, makeStringValue } from "./types";
 
 const variables = new Map<string, RuntimeValue>();
 
@@ -27,6 +27,13 @@ export function evaluate (astNode: Statement): RuntimeValue {
     
     case 'Number':
       return makeNumberValue((astNode as NumberLiteral).value);
+    case 'String':
+      return makeStringValue((astNode as StringLiteral).value);
+    case 'Array':
+      return makeArrayValue(
+        (astNode as ArrayLiteral).elements
+        .map(elem => evaluate(elem))
+      );
     case 'Identifier':
       return evaluateIdentifier(astNode as Identifier);
     
@@ -34,6 +41,8 @@ export function evaluate (astNode: Statement): RuntimeValue {
       return evaluateBinaryOperation(astNode as BinaryOperation);
     case 'AssignmentExpression':
       return evaluateAssignmentExpression(astNode as AssignmentExpression);
+    case 'MemberExpression':
+      return evaluateMemberExpression(astNode as MemberExpression);
 
     default:
       throw new RuntimeError(`Unrecognised AST node: ${JSON.stringify(astNode, null, 2)}`);

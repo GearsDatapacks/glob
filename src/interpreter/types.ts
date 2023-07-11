@@ -4,6 +4,8 @@ export type ValueType =
   'null'
   | 'boolean'
   | 'number'
+  | 'string'
+  | 'array'
   | 'native_function'
   | 'function';
 
@@ -36,6 +38,24 @@ export interface NumberValue extends RuntimeValue {
 
 export function makeNumberValue (n: number): NumberValue {
   return { type: 'number', value: n };
+}
+
+export interface StringValue extends RuntimeValue {
+  type: 'string';
+  value: string;
+}
+
+export function makeStringValue (s: string): StringValue {
+  return { type: 'string', value: s };
+}
+
+export interface ArrayValue extends RuntimeValue {
+  type: 'array';
+  value: RuntimeValue[];
+}
+
+export function makeArrayValue (a: RuntimeValue[]): ArrayValue {
+  return { type: 'array', value: a };
 }
 
 export type FunctionCall = (args: RuntimeValue[]) => RuntimeValue;

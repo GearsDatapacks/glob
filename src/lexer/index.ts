@@ -30,10 +30,10 @@ export default function tokenise (sourceCode: string): Token[] {
   while (src.length > 0) {
     index++;
 
-    if (VALID_SYMBOL_CHARS.includes(src[0])) {
+    if (VALID_SYMBOL_CHARS.has(src[0])) {
       let found = false;
 
-      for (const [symbol, type] of Object.entries(SYMBOLS)) {
+      for (const [symbol, type] of SYMBOLS) {
         if (src.startsWith(symbol)) {
           tokens.push(token(type, shift(symbol.length)));
           found = true;
@@ -67,13 +67,36 @@ export default function tokenise (sourceCode: string): Token[] {
         identifier += shift();
       }
 
-      if (identifier in KEYWORDS) {
-        tokens.push(token(KEYWORDS[identifier], identifier));
+      if (KEYWORDS.has(identifier)) {
+        tokens.push(token(KEYWORDS.get(identifier) as TokenType, identifier));
       }
 
       else {
         tokens.push(token(TokenType.Identifier, identifier));
       }
+    }
+
+    else if (src[0] === '"') {
+      let string = '';
+      shift();
+
+      while (src[0] !== '"') {
+        if (!src[0]) {
+          throw new SyntaxError('Expected closing quote after string, reached EndOfFile');
+        }
+
+        if (src[0] === '\\') {
+          shift();
+          string += shift();
+        }
+        else {
+          string += shift();
+        }
+      }
+
+      shift();
+
+      tokens.push(token(TokenType.String, string));
     }
 
     else {
