@@ -1,7 +1,11 @@
+import { Statement } from "../parser/ast";
+
 export type ValueType = 
   'null'
   | 'boolean'
-  | 'number';
+  | 'number'
+  | 'native_function'
+  | 'function';
 
 export interface RuntimeValue {
   type: ValueType;
@@ -32,4 +36,34 @@ export interface NumberValue extends RuntimeValue {
 
 export function makeNumberValue (n: number): NumberValue {
   return { type: 'number', value: n };
+}
+
+export type FunctionCall = (args: RuntimeValue[]) => RuntimeValue;
+
+export interface NativeFunctionValue extends RuntimeValue {
+  type: 'native_function';
+  name: string;
+  call: FunctionCall;
+}
+
+export function makeNativeFunction (name: string, call: FunctionCall): NativeFunctionValue {
+  return {
+    type: 'native_function',
+    name,
+    call,
+  };
+}
+
+export interface FunctionValue extends RuntimeValue {
+  type: 'function';
+  name: string;
+  body: Statement[];
+}
+
+export function makeFunctionValue (name: string, body: Statement[]): FunctionValue {
+  return {
+    type: 'function',
+    name,
+    body,
+  }
 }

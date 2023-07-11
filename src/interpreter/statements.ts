@@ -1,7 +1,17 @@
-import { evaluate } from ".";
-import { IfStatement, Program } from "../parser/ast";
-import { RuntimeValue, makeNullValue } from "./types";
+import { evaluate, setVariable } from ".";
+import { FunctionDeclaration, IfStatement, Program, Statement } from "../parser/ast";
+import { RuntimeValue, makeFunctionValue, makeNullValue } from "./types";
 import { truthy } from "./utils";
+
+export function evaluateCodeBlock (block: Statement[]): RuntimeValue {
+  let lastEvaluated: RuntimeValue = makeNullValue();
+
+  for (const statement of block) {
+    lastEvaluated = evaluate(statement);
+  }
+
+  return lastEvaluated;
+}
 
 export function evaluateProgram (program: Program): RuntimeValue {
   let lastEvaluated: RuntimeValue = makeNullValue();
@@ -18,10 +28,11 @@ export function evaluateIfStatment (ifSstatement: IfStatement): RuntimeValue {
     return makeNullValue();
   }
 
-  let lastEvaluated: RuntimeValue = makeNullValue();
-  for (const statement of ifSstatement.body) {
-    lastEvaluated = evaluate(statement);
-  }
+  return evaluateCodeBlock(ifSstatement.body);
+}
 
-  return lastEvaluated;
+export function evaluateFunctionDeclaration (declaration: FunctionDeclaration): RuntimeValue {
+  const fn = makeFunctionValue(declaration.name, declaration.body);
+
+  return setVariable(declaration.name, fn);
 }

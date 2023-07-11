@@ -8,11 +8,15 @@ export enum TokenType {
   // Keywords
   Let,
   If,
+  Function,
   End,
 
   // Symbols
   BinaryOperator, Equals,
   LeftParen, RightParen,
+  LeftSquare, RightSquare,
+  LeftBrace, RightBrace,
+  Comma,
 }
 
 export interface Token {

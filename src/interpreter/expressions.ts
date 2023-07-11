@@ -1,10 +1,17 @@
 import { evaluate, getVariable, setVariable } from ".";
 import { RuntimeError, TypeError } from "../errors";
 import { AssignmentExpression, BinaryOperation, Identifier } from "../parser/ast";
-import { NumberValue, RuntimeValue, makeNullValue, makeNumberValue } from "./types";
+import { evaluateCodeBlock } from "./statements";
+import { FunctionValue, NumberValue, RuntimeValue, makeNullValue, makeNumberValue } from "./types";
 
 export function evaluateIdentifier (identifier: Identifier): RuntimeValue {
-  return getVariable(identifier.value);
+  const value = getVariable(identifier.value);
+
+  if (value.type === 'function') {
+    return evaluateCodeBlock((value as FunctionValue).body);
+  }
+
+  return value;
 }
 
 function evaluateNumericBinaryOperation (left: RuntimeValue, right: RuntimeValue, op: string): RuntimeValue {

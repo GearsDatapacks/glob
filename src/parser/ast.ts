@@ -2,6 +2,7 @@ export type NodeType =
   // Statements
   'Program'
   | 'IfStatement'
+  | 'FunctionDeclaration'
 
   // Expressions
   | 'AssignmentExpression'
@@ -24,6 +25,12 @@ export interface Program extends Statement {
 export interface IfStatement extends Statement {
   type: 'IfStatement';
   condition: Expression;
+  body: Statement[];
+}
+
+export interface FunctionDeclaration extends Statement {
+  type: 'FunctionDeclaration';
+  name: string;
   body: Statement[];
 }
 

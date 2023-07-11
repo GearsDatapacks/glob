@@ -1,7 +1,7 @@
-import { LanguageError, ParseError } from "../errors";
+import { LanguageError, ParseError, SyntaxError } from "../errors";
 import tokenise from "../lexer"
 import { Token, TokenType } from "../lexer/types"
-import { AssignmentExpression, BinaryOperation, Expression, Identifier, IfStatement, NumberLiteral, Program, Statement } from "./ast";
+import { AssignmentExpression, BinaryOperation, Expression, FunctionDeclaration, Identifier, IfStatement, NumberLiteral, Program, Statement } from "./ast";
 
 export default class Parser {
   private tokens: Token[] = []
@@ -46,6 +46,8 @@ export default class Parser {
     switch (this.next().type) {
       case TokenType.If:
         return this.parseIfStatement();
+      case TokenType.Function:
+        return this.parseFunctionDeclaration();
 
       default:
         return this.parseExpression();
@@ -67,6 +69,29 @@ export default class Parser {
       condition,
       body,
     } as IfStatement;
+  }
+
+  private parseFunctionDeclaration (): Statement {
+    this.consume();
+
+    const name = this.expect(
+      TokenType.Identifier,
+      token => new SyntaxError(`Expected identifier after function keyword, got ${token}`)
+    ).value;
+
+    const body: Statement[] = [];
+
+    while (this.next().type !== TokenType.End) {
+      body.push(this.parseStatement());
+    }
+
+    this.consume(); // Consume end keyword
+
+    return {
+      type: 'FunctionDeclaration',
+      name,
+      body,
+    } as FunctionDeclaration;
   }
 
   private parseExpression (): Expression {
