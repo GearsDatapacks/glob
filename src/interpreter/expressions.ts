@@ -22,10 +22,6 @@ export function evaluateIdentifier (identifier: Identifier): RuntimeValue {
 }
 
 function evaluateNumericBinaryOperation (left: RuntimeValue, right: RuntimeValue, op: string): RuntimeValue {
-  if (left.type !== 'number' || right.type !== 'number') {
-    throw new TypeError(`Operator '${op}' cannot be applied to type ${left.type} and ${right.type}`);
-  }
-
   const leftNum = (left as NumberValue).value;
   const rightNum = (right as NumberValue).value;
 
@@ -68,15 +64,6 @@ export function evaluateBinaryOperation (binOp: BinaryOperation): RuntimeValue {
 
   switch (binOp.operator) {
     case '+':
-      if (left.type !== right.type) {
-        throw new TypeError(`Type ${left.type} cannot be added to type ${right.type}`);
-      }
-
-      if (left.type === 'number') {
-        return evaluateNumericBinaryOperation(left, right, binOp.operator);
-      }
-      throw new TypeError(`Operator '+' cannot be applied to type ${left.type}`);
-
     case '-':
     case '*':
     case '/':

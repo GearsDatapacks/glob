@@ -70,11 +70,7 @@ export default function tokenise (sourceCode: string): Token[] {
       let string = '';
       shift();
 
-      while (src[0] !== '"') {
-        if (!src[0]) {
-          throw new SyntaxError('Expected closing quote after string, reached EndOfFile');
-        }
-
+      while (src[0] && src[0] !== '"') {
         if (src[0] === '\\') {
           shift();
           string += shift();
@@ -84,7 +80,9 @@ export default function tokenise (sourceCode: string): Token[] {
         }
       }
 
-      shift();
+      if (src[0]) {
+        shift();
+      }
 
       tokens.push(token(TokenType.String, string));
     }
@@ -95,7 +93,8 @@ export default function tokenise (sourceCode: string): Token[] {
         continue;
       }
 
-      throw new SyntaxError(`Unexpected character "${src[0]}" at position ${index}`);
+      // If we find an invalid character
+      shift();
     }
   }
 

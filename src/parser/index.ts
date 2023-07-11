@@ -206,10 +206,9 @@ export default class Parser {
 
       const property = this.parseExpression();
 
-      this.expect(
-        TokenType.RightSquare,
-        token => new SyntaxError(`Expected closing bracket after member expression, got ${token}`)
-      );
+      if (this.next().type === TokenType.RightSquare) {
+        this.consume();
+      }
 
       object = {
         type: 'MemberExpression',
@@ -253,10 +252,9 @@ export default class Parser {
       elements.push(this.parseExpression());
     }
 
-    this.expect(
-      TokenType.RightSquare,
-      token => new SyntaxError(`Expected closing bracket after array, got ${token}`)
-    );
+    if (this.next().type === TokenType.RightSquare) {
+      this.consume();
+    }
 
     return {
       type: 'Array',
@@ -278,10 +276,9 @@ export default class Parser {
       case TokenType.LeftParen:
         this.consume();
         const expression = this.parseExpression();
-        this.expect(
-          TokenType.RightParen,
-          token => new ParseError(`Expected closing bracket after expression, got ${token}`)
-        );
+        if (this.next().type === TokenType.RightParen) {
+          this.consume();
+        }
         return expression;
       
       default:
