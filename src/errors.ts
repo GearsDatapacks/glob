@@ -7,7 +7,7 @@ export class LanguageError {
   }
 
   protected format (): string {
-    return this.prefix + ': ' + this._error;
+    return `Uncaught ${this.prefix}: ${this._error}`;
   }
 
   get error () {
@@ -17,4 +17,16 @@ export class LanguageError {
 
 export class ParseError extends LanguageError {
   protected prefix: string = 'ParseError';
+}
+
+export class SyntaxError extends ParseError {
+  protected prefix: string = 'SyntaxError';
+}
+
+export class RuntimeError extends LanguageError {
+  protected prefix: string = 'RuntimeError';
+}
+
+export class TypeError extends RuntimeError {
+  protected prefix: string = 'TypeError';
 }

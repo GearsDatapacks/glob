@@ -7,6 +7,7 @@ export enum TokenType {
 
   // Keywords
   Let,
+  If,
 
   // Symbols
   BinaryOperator, Equals,

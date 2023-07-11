@@ -1,4 +1,4 @@
-import { ParseError } from "../errors";
+import { ParseError, SyntaxError } from "../errors";
 import { isAlphabetic, isAlphanumeric, isNumber, isSkippable } from "./predicates";
 import { KEYWORDS, SYMBOLS, VALID_SYMBOL_CHARS } from "./registry";
 import { Token, TokenType } from "./types";
@@ -82,7 +82,7 @@ export default function tokenise (sourceCode: string): Token[] {
         continue;
       }
 
-      throw new ParseError(`Unexpected character "${src[0]}" at position ${index}`);
+      throw new SyntaxError(`Unexpected character "${src[0]}" at position ${index}`);
     }
   }
 

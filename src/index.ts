@@ -1,8 +1,9 @@
 import { inspect } from "util";
 import Readline from "readline/promises";
 import * as fs from 'fs/promises';
-import tokenise from "./lexer";
 import { LanguageError } from "./errors";
+import Parser from "./parser";
+import { evaluate } from "./interpreter";
 
 const stdio = Readline.createInterface({
   input: process.stdin,
@@ -23,15 +24,12 @@ else {
 }
 
 async function run (fileName: string) {
-  // const parser = new Parser();
-  // const env = createGlobalEnvironemt();
+  const parser = new Parser();
   try {
     const sourceCode = (await fs.readFile(fileName)).toString();
-    // const program = parser.parse(sourceCode);
-    // const result = evaluate(program, env);
+    const program = parser.parse(sourceCode);
+    const result = evaluate(program);
     
-    
-    log(tokenise(sourceCode));
     // log(result);
 
     process.exit(0);
@@ -47,9 +45,9 @@ async function run (fileName: string) {
 }
 
 async function repl () {
-  // const parser = new Parser();
+  const parser = new Parser();
 
-  console.log('Esojam2 v0.1.0');
+  console.log('Glob v0.1.0');
 
   while (true) {
     const input = await stdio.question('> ');
@@ -58,11 +56,11 @@ async function repl () {
       process.exit(0);
     }
     try {
-      // const program = parser.parse(input);
+      const program = parser.parse(input);
 
-      // const result = evaluate(program, env);
+      const result = evaluate(program);
   
-      log(tokenise(input));
+      log(result);
     }
     
     catch (err) {
@@ -74,8 +72,6 @@ async function repl () {
         console.error(err);
         process.exit(1);
       }
-
-      // process.exit(1);
     }
   }
 }
