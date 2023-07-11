@@ -6,7 +6,7 @@
   "scripts": {
     "repl": "ts-node src",
     "evaluate": "ts-node src",
-    "build": "tsc -b"
+    "build": "./build.sh"
   },
   "keywords": [],
   "author": "Gears",

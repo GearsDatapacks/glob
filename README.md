@@ -117,6 +117,20 @@ x = x - 2
 "x is now 0"
 ```
 
+### Types and errors
+Glob doesn't care about types, and uses javascript's method of addition, subtraction, etc. So if you see `[Object object]` out in the wild, that's why.
+Also, if glob finds a missing character, it doesn't really care.
+
+EX.
+```
+foo = [1,2,(3 + 1
+
+"valid syntax"
+```
+
+If it encounters an error while evaluating a value, it will just return null and continue.
+
+
 ### Stdlib
 Now, you probably noticed that I haven't used any builtin functions yet.
 There are 2 of them:
@@ -133,3 +147,16 @@ print
 ```
 
 More example programs can be found in the examples folder.
+
+### Try glob
+1. Make sure you have node installed.
+2. Download the latest version of glob from the releases page and extract it.
+3. Open a terminal and run `node <path to extracted folder>` (This folder should contain and `index.js` file).
+Running the above command with no additional arguments will open the glob repl, which allows you to write glob line by line.
+If you wish to create more complex programs, create a file ending in `.glob`, and run `node <path to extracted folder> <path to glob file>`. This should interpret the entire file.
+
+### Contributing
+Feel free to look at the source code and have a go at modifying it. 
+It's a bit of a mess at the moment as I had very limited time to make this project.
+
+**Note: to run the dev version, you will need typescript installed on you machine. You can either use ts-node to run the code of the fly, or the typescript compiler to compile to js, then run it.**
