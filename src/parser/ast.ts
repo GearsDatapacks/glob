@@ -6,6 +6,7 @@ export type NodeType =
 
   // Expressions
   | 'AssignmentExpression'
+  | 'AppendExpression'
   | 'BinaryOperation'
   | 'UnaryOperation'
   | 'MemberExpression'
@@ -55,6 +56,12 @@ export interface AssignmentExpression extends Expression {
   type: 'AssignmentExpression';
   assignee: Expression;
   value: Expression;
+}
+
+export interface AppendExpression extends Expression {
+  type: 'AppendExpression';
+  left: Expression;
+  right: Expression;
 }
 
 export interface Identifier extends Expression {

@@ -2,7 +2,7 @@ import { LanguageError, ParseError, SyntaxError } from "../errors";
 import tokenise from "../lexer"
 import { UNARY_OPERATORS } from "../lexer/registry";
 import { Token, TokenType } from "../lexer/types"
-import { ArrayLiteral, AssignmentExpression, BinaryOperation, Expression, FunctionDeclaration, Identifier, IfStatement, MemberExpression, Program, Statement, StringLiteral, UnaryOperation } from "./ast";
+import { AppendExpression, ArrayLiteral, AssignmentExpression, BinaryOperation, Expression, FunctionDeclaration, Identifier, IfStatement, MemberExpression, Program, Statement, StringLiteral, UnaryOperation } from "./ast";
 
 export default class Parser {
   private tokens: Token[] = []
@@ -100,11 +100,11 @@ export default class Parser {
   }
 
   private parseAssignmentExpression (): Expression {
-    const assignee = this.parseEqualityExpression();
+    const assignee = this.parseAppendExpression();
 
-    if (this.next().type === TokenType.Equals) {
+    if (this.next().value === '=') {
       this.consume();
-      const value = this.parseEqualityExpression();
+      const value = this.parseAssignmentExpression();
       return {
         type: 'AssignmentExpression',
         assignee,
@@ -113,6 +113,22 @@ export default class Parser {
     }
 
     return assignee;
+  }
+
+  private parseAppendExpression (): Expression {
+    let left = this.parseEqualityExpression();
+
+    while (this.next().value === '<<') {
+      this.consume();
+      const right = this.parseEqualityExpression();
+      left = {
+        type: 'AppendExpression',
+        left,
+        right,
+      } as AppendExpression;
+    }
+
+    return left;
   }
 
   private parseEqualityExpression(): Expression {

@@ -15,7 +15,9 @@ export const SYMBOLS: Map<string, TokenType> = new Map([
   ['*', TokenType.Operator],
   ['/', TokenType.Operator],
   ['%', TokenType.Operator],
+  ['=', TokenType.Operator],
   
+  ['<<', TokenType.Operator],
   ['==', TokenType.Operator],
   ['!=', TokenType.Operator],
   ['>=', TokenType.Operator],

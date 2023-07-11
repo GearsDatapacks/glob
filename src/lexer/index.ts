@@ -46,10 +46,6 @@ export default function tokenise (sourceCode: string): Token[] {
       }
     }
 
-    if (src[0] === '=') {
-      tokens.push(token(TokenType.Equals, shift()));
-    }
-
     else if (isAlphanumeric(src[0])) {
       let identifier = '';
 

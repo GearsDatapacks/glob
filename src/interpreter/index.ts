@@ -1,6 +1,6 @@
 import { RuntimeError } from "../errors";
-import { ArrayLiteral, AssignmentExpression, BinaryOperation, FunctionDeclaration, Identifier, IfStatement, MemberExpression, Program, Statement, StringLiteral, UnaryOperation } from "../parser/ast";
-import { evaluateAssignmentExpression, evaluateBinaryOperation, evaluateIdentifier, evaluateMemberExpression, evaluateUnaryOperation } from "./expressions";
+import { AppendExpression, ArrayLiteral, AssignmentExpression, BinaryOperation, FunctionDeclaration, Identifier, IfStatement, MemberExpression, Program, Statement, StringLiteral, UnaryOperation } from "../parser/ast";
+import { evaluateAppendExpression, evaluateAssignmentExpression, evaluateBinaryOperation, evaluateIdentifier, evaluateMemberExpression, evaluateUnaryOperation } from "./expressions";
 import { evaluateFunctionDeclaration, evaluateIfStatment, evaluateProgram } from "./statements";
 import { RuntimeValue, makeArrayValue, makeBooleanValue, makeNullValue, makeNumberValue, makeStringValue } from "./types";
 export function evaluate (astNode: Statement): RuntimeValue {
@@ -31,6 +31,8 @@ export function evaluate (astNode: Statement): RuntimeValue {
         return evaluateAssignmentExpression(astNode as AssignmentExpression);
       case 'MemberExpression':
         return evaluateMemberExpression(astNode as MemberExpression);
+      case 'AppendExpression':
+        return evaluateAppendExpression(astNode as AppendExpression);
 
       default:
         throw new RuntimeError(`Unrecognised AST node: ${JSON.stringify(astNode, null, 2)}`);

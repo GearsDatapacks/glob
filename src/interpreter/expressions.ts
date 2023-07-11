@@ -1,9 +1,9 @@
 import { evaluate } from ".";
 import { getVariable, setVariable } from "./environment";
 import { RuntimeError, TypeError } from "../errors";
-import { AssignmentExpression, BinaryOperation, Identifier, MemberExpression, UnaryOperation } from "../parser/ast";
+import { AppendExpression, AssignmentExpression, BinaryOperation, Identifier, MemberExpression, UnaryOperation } from "../parser/ast";
 import { evaluateCodeBlock } from "./statements";
-import { ArrayValue, FunctionValue, NativeFunctionValue, NumberValue, RuntimeValue, makeBooleanValue, makeNumberValue } from "./types";
+import { ArrayValue, FunctionValue, NativeFunctionValue, NumberValue, RuntimeValue, makeArrayValue, makeBooleanValue, makeNumberValue } from "./types";
 import { equal, truthy } from "./utils";
 
 export function evaluateIdentifier (identifier: Identifier): RuntimeValue {
@@ -130,6 +130,43 @@ export function evaluateAssignmentExpression (assignment: AssignmentExpression):
 
   else {
     throw new TypeError(`Cannot assign to non-identifier value ${assignment.assignee.type}`);
+  }
+}
+
+export function evaluateAppendExpression (appendExpression: AppendExpression): RuntimeValue {
+  if (appendExpression.left.type === 'Identifier') {
+    const name = (appendExpression.left as Identifier).value;
+    const value = evaluate(appendExpression.right);
+
+    const array = (getVariable(name) as ArrayValue).value;
+    array.push(value);
+  
+    return setVariable(name, makeArrayValue(array));
+  }
+
+  else if (appendExpression.left.type === 'MemberExpression') {
+    const memberExpression = appendExpression.left as MemberExpression;
+    const object = evaluate(memberExpression.object);
+    const property = evaluate(memberExpression.property);
+
+    if (object.type !== 'array') {
+      throw new TypeError(`Object of type ${object.type} is not indexable`);
+    }
+  
+    if (property.type !== 'number') {
+      throw new TypeError(`Array is not indexable with type ${property.type}`);
+    }
+
+    const value = evaluate(appendExpression.right);
+    const memberValue = (object as ArrayValue).value[(property as NumberValue).value];
+
+    (memberValue as ArrayValue).value.push(value);
+
+    return memberValue;
+  }
+
+  else {
+    throw new TypeError(`Cannot assign to non-identifier value ${appendExpression.left.type}`);
   }
 }
 
