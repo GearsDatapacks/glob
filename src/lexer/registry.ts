@@ -24,6 +24,10 @@ export const SYMBOLS: Map<string, TokenType> = new Map([
   [',', TokenType.Comma],
 ]);
 
+export const UNARY_OPERATORS = new Set<string>([
+  '-', '!'
+]);
+
 export const KEYWORDS: Map<string, TokenType> = new Map([
   ['let', TokenType.Let],
   ['if', TokenType.If],

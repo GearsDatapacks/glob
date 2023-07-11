@@ -7,7 +7,7 @@ export type NodeType =
   // Expressions
   | 'AssignmentExpression'
   | 'BinaryOperation'
-  | 'FunctionCall'
+  | 'UnaryOperation'
   | 'MemberExpression'
 
   // Literals
@@ -44,6 +44,12 @@ export interface BinaryOperation extends Expression {
   left: Expression;
   right: Expression;
   operator: string;
+}
+
+export interface UnaryOperation extends Expression {
+  type: 'UnaryOperation';
+  operator: string;
+  operand: Expression;
 }
 
 export interface AssignmentExpression extends Expression {

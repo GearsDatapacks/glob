@@ -1,8 +1,9 @@
 import { evaluate, getVariable, setVariable } from ".";
 import { RuntimeError, TypeError } from "../errors";
-import { AssignmentExpression, BinaryOperation, Identifier, MemberExpression } from "../parser/ast";
+import { AssignmentExpression, BinaryOperation, Identifier, MemberExpression, UnaryOperation } from "../parser/ast";
 import { evaluateCodeBlock } from "./statements";
-import { ArrayValue, FunctionValue, NumberValue, RuntimeValue, makeNullValue, makeNumberValue } from "./types";
+import { ArrayValue, FunctionValue, NumberValue, RuntimeValue, makeBooleanValue, makeNumberValue } from "./types";
+import { truthy } from "./utils";
 
 export function evaluateIdentifier (identifier: Identifier): RuntimeValue {
   const value = getVariable(identifier.value);
@@ -70,6 +71,19 @@ export function evaluateBinaryOperation (binOp: BinaryOperation): RuntimeValue {
     
     default:
       throw new RuntimeError(`Invalid operator ${binOp.operator}`);
+  }
+}
+
+export function evaluateUnaryOperation (unOp: UnaryOperation): RuntimeValue {
+  const operand = evaluate(unOp.operand);
+  switch (unOp.operator) {
+    case '!':
+      return makeBooleanValue(!truthy(operand));
+    case '-':
+      return makeNumberValue(-(operand as NumberValue).value);
+    
+    default:
+      throw new RuntimeError(`Unrecognised unary operator "${unOp.operator}"`);
   }
 }
 

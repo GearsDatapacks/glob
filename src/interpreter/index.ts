@@ -1,6 +1,6 @@
 import { RuntimeError } from "../errors";
-import { ArrayLiteral, AssignmentExpression, BinaryOperation, FunctionDeclaration, Identifier, IfStatement, MemberExpression, NumberLiteral, Program, Statement, StringLiteral } from "../parser/ast";
-import { evaluateAssignmentExpression, evaluateBinaryOperation, evaluateIdentifier, evaluateMemberExpression } from "./expressions";
+import { ArrayLiteral, AssignmentExpression, BinaryOperation, FunctionDeclaration, Identifier, IfStatement, MemberExpression, NumberLiteral, Program, Statement, StringLiteral, UnaryOperation } from "../parser/ast";
+import { evaluateAssignmentExpression, evaluateBinaryOperation, evaluateIdentifier, evaluateMemberExpression, evaluateUnaryOperation } from "./expressions";
 import { evaluateFunctionDeclaration, evaluateIfStatment, evaluateProgram } from "./statements";
 import { RuntimeValue, makeArrayValue, makeNullValue, makeNumberValue, makeStringValue } from "./types";
 
@@ -39,6 +39,8 @@ export function evaluate (astNode: Statement): RuntimeValue {
     
     case 'BinaryOperation':
       return evaluateBinaryOperation(astNode as BinaryOperation);
+    case 'UnaryOperation':
+      return evaluateUnaryOperation(astNode as UnaryOperation);
     case 'AssignmentExpression':
       return evaluateAssignmentExpression(astNode as AssignmentExpression);
     case 'MemberExpression':

@@ -1,7 +1,8 @@
 import { LanguageError, ParseError, SyntaxError } from "../errors";
 import tokenise from "../lexer"
+import { UNARY_OPERATORS } from "../lexer/registry";
 import { Token, TokenType } from "../lexer/types"
-import { ArrayLiteral, AssignmentExpression, BinaryOperation, Expression, FunctionDeclaration, Identifier, IfStatement, MemberExpression, NumberLiteral, Program, Statement, StringLiteral } from "./ast";
+import { ArrayLiteral, AssignmentExpression, BinaryOperation, Expression, FunctionDeclaration, Identifier, IfStatement, MemberExpression, NumberLiteral, Program, Statement, StringLiteral, UnaryOperation } from "./ast";
 
 export default class Parser {
   private tokens: Token[] = []
@@ -132,11 +133,11 @@ export default class Parser {
   }
 
   private parseMultiplicativeExpression(): Expression {
-    let left = this.parseMemberExpression();
+    let left = this.parseUnaryOperation();
 
     while (this.next().value === '*' || this.next().value === '/' || this.next().value === '%') {
       const operator = this.consume().value;
-      const right = this.parseMemberExpression();
+      const right = this.parseUnaryOperation();
       left = {
         type: 'BinaryOperation',
         left,
@@ -146,6 +147,21 @@ export default class Parser {
     }
 
     return left;
+  }
+
+  private parseUnaryOperation (): Expression {
+    if (this.next().type !== TokenType.Operator || !UNARY_OPERATORS.has(this.next().value)) {
+      return this.parseMemberExpression();
+    }
+
+    const operator = this.consume().value;
+    const operand = this.parseMemberExpression();
+
+    return {
+      type: 'UnaryOperation',
+      operator,
+      operand
+    } as UnaryOperation;
   }
 
   private parseMemberExpression(): Expression {
@@ -175,11 +191,12 @@ export default class Parser {
   
   // Assignment
   // Logical operators
+  // Equality
   // Comparison
   // Addition/Subtraction
   // Multiplication/Division
-  // Member access
   // Unary operation
+  // Member access
   // Literal
 
   private parseArray (): Expression {
