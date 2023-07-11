@@ -4,18 +4,6 @@ import { evaluateAssignmentExpression, evaluateBinaryOperation, evaluateIdentifi
 import { evaluateFunctionDeclaration, evaluateIfStatment, evaluateProgram } from "./statements";
 import { RuntimeValue, makeArrayValue, makeBooleanValue, makeNullValue, makeNumberValue, makeStringValue } from "./types";
 
-const variables = new Map<string, RuntimeValue>();
-
-export function setVariable (name: string, value: RuntimeValue): RuntimeValue {
-  variables.set(name, value);
-
-  return value;
-}
-
-export function getVariable (name: string): RuntimeValue {
-  return variables.get(name) || makeNullValue();
-}
-
 export function evaluate (astNode: Statement): RuntimeValue {
   try {
     switch (astNode.type) {

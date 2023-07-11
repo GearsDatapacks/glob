@@ -1,5 +1,5 @@
 import { TypeError } from "../errors";
-import { ArrayValue, BooleanValue, NumberValue, RuntimeValue, StringValue } from "./types";
+import { ArrayValue, BooleanValue, FunctionValue, NumberValue, RuntimeValue, StringValue } from "./types";
 
 export function truthy (value: RuntimeValue): boolean {
   switch (value.type) {
@@ -53,5 +53,27 @@ export function equal (left: RuntimeValue, right: RuntimeValue): boolean {
 
     default:
       throw new TypeError(`Invalid type for equality check: ${JSON.stringify(left.type)}`);
+  }
+}
+
+export function stringify (value: RuntimeValue): string {
+  switch (value.type) {
+    case 'null':
+      return 'null';
+    case 'boolean':
+      return (value as BooleanValue).value ? 'true' : 'false';
+    case 'number':
+      return (value as NumberValue).value.toString();
+    case 'string':
+      return '"' + (value as StringValue).value + '"';
+    case 'array':
+      const stringifiedElements = (value as ArrayValue).value.map(value => stringify(value));
+      return `[${stringifiedElements.join(', ')}]`;
+    case 'function':
+    case 'native_function':
+      return `[Function: ${(value as FunctionValue).name}]`;
+
+    default:
+      throw new TypeError(`Cannot print value of type ${value.type}`);
   }
 }

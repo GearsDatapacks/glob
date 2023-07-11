@@ -1,19 +1,15 @@
-import { inspect } from "util";
 import Readline from "readline/promises";
 import * as fs from 'fs/promises';
 import { LanguageError } from "./errors";
 import Parser from "./parser";
 import { evaluate } from "./interpreter";
+import { setupEnvironment } from "./interpreter/environment";
+import { stringify } from "./interpreter/utils";
 
 const stdio = Readline.createInterface({
   input: process.stdin,
   output: process.stdout
 });
-
-const log = (x: any) => console.log(inspect(x, {
-  depth: Infinity,
-  colors: true,
-}));
 
 if (process.argv[2]) {
   run(process.argv[2]);
@@ -28,9 +24,8 @@ async function run (fileName: string) {
   try {
     const sourceCode = (await fs.readFile(fileName)).toString();
     const program = parser.parse(sourceCode);
+    setupEnvironment();
     const result = evaluate(program);
-    
-    log(result);
 
     process.exit(0);
   }
@@ -50,6 +45,7 @@ async function repl () {
   const parser = new Parser();
 
   console.log('Glob v0.1.0');
+  setupEnvironment();
 
   while (true) {
     const input = await stdio.question('> ');
@@ -59,10 +55,9 @@ async function repl () {
     }
     try {
       const program = parser.parse(input);
-
       const result = evaluate(program);
   
-      log(result);
+      console.log(stringify(result));
     }
     
     catch (err) {

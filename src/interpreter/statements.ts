@@ -1,4 +1,5 @@
-import { evaluate, setVariable } from ".";
+import { evaluate } from ".";
+import { setVariable } from "./environment";
 import { FunctionDeclaration, IfStatement, Program, Statement } from "../parser/ast";
 import { RuntimeValue, makeFunctionValue, makeNullValue } from "./types";
 import { truthy } from "./utils";

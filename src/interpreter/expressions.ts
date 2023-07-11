@@ -1,8 +1,9 @@
-import { evaluate, getVariable, setVariable } from ".";
+import { evaluate } from ".";
+import { getVariable, setVariable } from "./environment";
 import { RuntimeError, TypeError } from "../errors";
 import { AssignmentExpression, BinaryOperation, Identifier, MemberExpression, UnaryOperation } from "../parser/ast";
 import { evaluateCodeBlock } from "./statements";
-import { ArrayValue, FunctionValue, NumberValue, RuntimeValue, makeBooleanValue, makeNumberValue } from "./types";
+import { ArrayValue, FunctionValue, NativeFunctionValue, NumberValue, RuntimeValue, makeBooleanValue, makeNumberValue } from "./types";
 import { equal, truthy } from "./utils";
 
 export function evaluateIdentifier (identifier: Identifier): RuntimeValue {
@@ -10,6 +11,9 @@ export function evaluateIdentifier (identifier: Identifier): RuntimeValue {
 
   if (value.type === 'function') {
     return evaluateCodeBlock((value as FunctionValue).body);
+  }
+  else if (value.type === 'native_function') {
+    return (value as NativeFunctionValue).call();
   }
 
   if (value.type === 'null') {

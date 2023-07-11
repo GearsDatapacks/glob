@@ -58,7 +58,7 @@ export function makeArrayValue (a: RuntimeValue[]): ArrayValue {
   return { type: 'array', value: a };
 }
 
-export type FunctionCall = (args: RuntimeValue[]) => RuntimeValue;
+export type FunctionCall = () => RuntimeValue;
 
 export interface NativeFunctionValue extends RuntimeValue {
   type: 'native_function';
