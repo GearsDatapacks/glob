@@ -2,7 +2,7 @@ import { LanguageError, ParseError, SyntaxError } from "../errors";
 import tokenise from "../lexer"
 import { UNARY_OPERATORS } from "../lexer/registry";
 import { Token, TokenType } from "../lexer/types"
-import { ArrayLiteral, AssignmentExpression, BinaryOperation, Expression, FunctionDeclaration, Identifier, IfStatement, MemberExpression, NumberLiteral, Program, Statement, StringLiteral, UnaryOperation } from "./ast";
+import { ArrayLiteral, AssignmentExpression, BinaryOperation, Expression, FunctionDeclaration, Identifier, IfStatement, MemberExpression, Program, Statement, StringLiteral, UnaryOperation } from "./ast";
 
 export default class Parser {
   private tokens: Token[] = []
@@ -223,14 +223,14 @@ export default class Parser {
 
   // Orders of precedence
   
-  // DONE Assignment
+  // Assignment
   // Equality
   // Comparison
-  // DONE Addition/Subtraction
-  // DONE Multiplication/Division
-  // DONE Unary operation
-  // DONE Member access
-  // DONE Literal
+  // Addition/Subtraction
+  // Multiplication/Division
+  // Unary operation
+  // Member access
+  // Literal
 
   private parseArray (): Expression {
     this.consume();
@@ -265,13 +265,7 @@ export default class Parser {
   }
 
   private parseLiteral (): Expression {
-    switch (this.next().type) {
-      case TokenType.Number:
-        return {
-          type: 'Number',
-          value: parseFloat(this.consume().value)
-        } as NumberLiteral;
-      
+    switch (this.next().type) {      
       case TokenType.String:
         return { type: 'String', value: this.consume().value } as StringLiteral;
       

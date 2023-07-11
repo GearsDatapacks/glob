@@ -1,5 +1,5 @@
 import { RuntimeError } from "../errors";
-import { ArrayLiteral, AssignmentExpression, BinaryOperation, FunctionDeclaration, Identifier, IfStatement, MemberExpression, NumberLiteral, Program, Statement, StringLiteral, UnaryOperation } from "../parser/ast";
+import { ArrayLiteral, AssignmentExpression, BinaryOperation, FunctionDeclaration, Identifier, IfStatement, MemberExpression, Program, Statement, StringLiteral, UnaryOperation } from "../parser/ast";
 import { evaluateAssignmentExpression, evaluateBinaryOperation, evaluateIdentifier, evaluateMemberExpression, evaluateUnaryOperation } from "./expressions";
 import { evaluateFunctionDeclaration, evaluateIfStatment, evaluateProgram } from "./statements";
 import { RuntimeValue, makeArrayValue, makeBooleanValue, makeNullValue, makeNumberValue, makeStringValue } from "./types";
@@ -16,10 +16,6 @@ export function getVariable (name: string): RuntimeValue {
   return variables.get(name) || makeNullValue();
 }
 
-export function setupEnvironment () {
-  
-}
-
 export function evaluate (astNode: Statement): RuntimeValue {
   switch (astNode.type) {
     case 'Program':
@@ -29,8 +25,6 @@ export function evaluate (astNode: Statement): RuntimeValue {
     case 'FunctionDeclaration':
       return evaluateFunctionDeclaration(astNode as FunctionDeclaration);
     
-    case 'Number':
-      return makeNumberValue((astNode as NumberLiteral).value);
     case 'String':
       return makeStringValue((astNode as StringLiteral).value);
     case 'Array':

@@ -12,6 +12,12 @@ export function evaluateIdentifier (identifier: Identifier): RuntimeValue {
     return evaluateCodeBlock((value as FunctionValue).body);
   }
 
+  if (value.type === 'null') {
+    if (!Number.isNaN(parseInt(identifier.value))) {
+      return makeNumberValue(parseInt(identifier.value));
+    }
+  }
+
   return value;
 }
 

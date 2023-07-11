@@ -11,7 +11,6 @@ export type NodeType =
   | 'MemberExpression'
 
   // Literals
-  | 'Number'
   | 'Array'
   | 'String'
   | 'Identifier';
@@ -56,11 +55,6 @@ export interface AssignmentExpression extends Expression {
   type: 'AssignmentExpression';
   assignee: Expression;
   value: Expression;
-}
-
-export interface NumberLiteral extends Expression {
-  type: 'Number';
-  value: number;
 }
 
 export interface Identifier extends Expression {

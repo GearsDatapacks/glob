@@ -1,5 +1,5 @@
 import { ParseError, SyntaxError } from "../errors";
-import { isAlphabetic, isAlphanumeric, isNumber, isSkippable } from "./predicates";
+import { isAlphanumeric, isSkippable } from "./predicates";
 import { KEYWORDS, SYMBOLS, VALID_SYMBOL_CHARS } from "./registry";
 import { Token, TokenType } from "./types";
 
@@ -50,17 +50,7 @@ export default function tokenise (sourceCode: string): Token[] {
       tokens.push(token(TokenType.Equals, shift()));
     }
 
-    else if (isNumber(src[0])) {
-      let number = '';
-
-      while (isNumber(src[0])) {
-        number += shift();
-      }
-
-      tokens.push(token(TokenType.Number, number));
-    }
-
-    else if (isAlphabetic(src[0])) {
+    else if (isAlphanumeric(src[0])) {
       let identifier = '';
 
       while (isAlphanumeric(src[0])) {

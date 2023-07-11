@@ -2,7 +2,7 @@ export enum TokenType {
   EOF,
 
   // Literals
-  Number, String,
+  String,
   Identifier,
 
   // Keywords
