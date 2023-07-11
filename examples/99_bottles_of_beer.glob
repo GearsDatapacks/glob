@@ -1,0 +1,21 @@
+bottles = 99
+newline = "
+"
+third_line = "Take one down, pass it around,"
+
+function 99_bottles_of_beer
+  first_line = bottles + " bottles of beer on the wall,"
+  second_line = bottles + " bottles of beer."
+  bottles = bottles - 1
+  fourth_line = bottles + " bottles of beer on the wall."
+
+  print_input = first_line + newline + second_line + newline + third_line + newline + fourth_line + newline
+
+  print
+
+  if bottles > 0
+    99_bottles_of_beer
+  end
+end
+
+99_bottles_of_beer

@@ -1,0 +1,27 @@
+n = 1
+
+function fizzbuzz
+  print_input = n
+
+  if n % 3 == 0
+    print_input = "fizz"
+  end
+
+  if n % 5 == 0
+    print_input = "buzz"
+  end
+
+  if n % 15 == 0
+    print_input = "fizzbuzz"
+  end
+
+  print
+
+  n = n + 1
+
+  if n <= 100
+   fizzbuzz
+  end
+end
+
+fizzbuzz

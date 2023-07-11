@@ -1,0 +1,19 @@
+sequence = [0, 1]
+a = 0
+b = 1
+n = 0
+
+function fibbonacci
+  c = a + b a = b b = c
+  sequence << c
+
+  n = n + 1
+
+  if n <= 100
+    fibbonacci
+  end
+end
+
+fibbonacci
+print_input = sequence
+print
