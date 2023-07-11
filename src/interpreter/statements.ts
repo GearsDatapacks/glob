@@ -15,13 +15,7 @@ export function evaluateCodeBlock (block: Statement[]): RuntimeValue {
 }
 
 export function evaluateProgram (program: Program): RuntimeValue {
-  let lastEvaluated: RuntimeValue = makeNullValue();
-
-  for (const statement of program.body) {
-    lastEvaluated = evaluate(statement);
-  }
-
-  return lastEvaluated;
+  return evaluateCodeBlock(program.body);
 }
 
 export function evaluateIfStatment (ifSstatement: IfStatement): RuntimeValue {

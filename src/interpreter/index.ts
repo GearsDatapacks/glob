@@ -3,7 +3,6 @@ import { ArrayLiteral, AssignmentExpression, BinaryOperation, FunctionDeclaratio
 import { evaluateAssignmentExpression, evaluateBinaryOperation, evaluateIdentifier, evaluateMemberExpression, evaluateUnaryOperation } from "./expressions";
 import { evaluateFunctionDeclaration, evaluateIfStatment, evaluateProgram } from "./statements";
 import { RuntimeValue, makeArrayValue, makeBooleanValue, makeNullValue, makeNumberValue, makeStringValue } from "./types";
-
 export function evaluate (astNode: Statement): RuntimeValue {
   try {
     switch (astNode.type) {
