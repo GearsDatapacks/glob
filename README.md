@@ -1,7 +1,7 @@
 # Glob
 ### Glob is a high level esoteric programming language.
 
-Glob was a submission in the Truttle1 Esojam (Esolang jam), where the theme was "It's not a bug, it's a feature"
+Glob was a submission in the [Truttle1 Esojam](https://discord.gg/Mb7KXydKwQ) (Esolang jam), where the theme was "It's not a bug, it's a feature"
 
 If you don't look too closely, glob just looks like your average programming language.
 
@@ -146,11 +146,11 @@ print_input = "Hello, world!"
 print
 ```
 
-More example programs can be found in the examples folder.
+More example programs can be found in the [examples folder](https://github.com/GearsDatapacks/glob/tree/main/examples).
 
 ### Try glob
 1. Make sure you have node installed.
-2. Download the latest version of glob from the releases page and extract it.
+2. Download the latest version of glob from the [releases page](https://github.com/GearsDatapacks/glob/releases) and extract it.
 3. Open a terminal and run `node <path to extracted folder>` (This folder should contain and `index.js` file).
 Running the above command with no additional arguments will open the glob repl, which allows you to write glob line by line.
 If you wish to create more complex programs, create a file ending in `.glob`, and run `node <path to extracted folder> <path to glob file>`. This should interpret the entire file.
