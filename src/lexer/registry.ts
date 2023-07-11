@@ -18,4 +18,5 @@ export const SYMBOLS: Record<string, TokenType> = {
 export const KEYWORDS: Record<string, TokenType> = {
   let: TokenType.Let,
   if: TokenType.If,
+  end: TokenType.End,
 };

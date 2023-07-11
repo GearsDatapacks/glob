@@ -5,6 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "repl": "ts-node src",
+    "evaluate": "ts-node src",
     "build": "tsc -b"
   },
   "keywords": [],

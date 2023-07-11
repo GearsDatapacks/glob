@@ -1,7 +1,7 @@
 import { LanguageError, ParseError } from "../errors";
 import tokenise from "../lexer"
 import { Token, TokenType } from "../lexer/types"
-import { AssignmentExpression, BinaryOperation, Expression, Identifier, NumberLiteral, Program, Statement } from "./ast";
+import { AssignmentExpression, BinaryOperation, Expression, Identifier, IfStatement, NumberLiteral, Program, Statement } from "./ast";
 
 export default class Parser {
   private tokens: Token[] = []
@@ -43,7 +43,30 @@ export default class Parser {
   }
 
   private parseStatement (): Statement {
-    return this.parseExpression();
+    switch (this.next().type) {
+      case TokenType.If:
+        return this.parseIfStatement();
+
+      default:
+        return this.parseExpression();
+    }
+  }
+
+  private parseIfStatement (): Statement {
+    this.consume();
+
+    const condition = this.parseExpression();
+    const body: Statement[] = [];
+    while (this.next().type !== TokenType.End) {
+      body.push(this.parseStatement());
+    }
+    this.consume();
+
+    return {
+      type: 'IfStatement',
+      condition,
+      body,
+    } as IfStatement;
   }
 
   private parseExpression (): Expression {

@@ -30,7 +30,7 @@ async function run (fileName: string) {
     const program = parser.parse(sourceCode);
     const result = evaluate(program);
     
-    // log(result);
+    log(result);
 
     process.exit(0);
   }
@@ -39,7 +39,9 @@ async function run (fileName: string) {
     if (err instanceof LanguageError) {
       console.error(err.error);
     }
-    console.error(err);
+    else {
+      console.error(err);
+    }
     process.exit(1);
   }
 }
