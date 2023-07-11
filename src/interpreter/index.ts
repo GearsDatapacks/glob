@@ -2,7 +2,7 @@ import { RuntimeError } from "../errors";
 import { ArrayLiteral, AssignmentExpression, BinaryOperation, FunctionDeclaration, Identifier, IfStatement, MemberExpression, NumberLiteral, Program, Statement, StringLiteral, UnaryOperation } from "../parser/ast";
 import { evaluateAssignmentExpression, evaluateBinaryOperation, evaluateIdentifier, evaluateMemberExpression, evaluateUnaryOperation } from "./expressions";
 import { evaluateFunctionDeclaration, evaluateIfStatment, evaluateProgram } from "./statements";
-import { RuntimeValue, makeArrayValue, makeNullValue, makeNumberValue, makeStringValue } from "./types";
+import { RuntimeValue, makeArrayValue, makeBooleanValue, makeNullValue, makeNumberValue, makeStringValue } from "./types";
 
 const variables = new Map<string, RuntimeValue>();
 
@@ -14,6 +14,10 @@ export function setVariable (name: string, value: RuntimeValue): RuntimeValue {
 
 export function getVariable (name: string): RuntimeValue {
   return variables.get(name) || makeNullValue();
+}
+
+export function setupEnvironment () {
+  
 }
 
 export function evaluate (astNode: Statement): RuntimeValue {

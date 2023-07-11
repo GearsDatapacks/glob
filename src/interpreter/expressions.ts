@@ -3,7 +3,7 @@ import { RuntimeError, TypeError } from "../errors";
 import { AssignmentExpression, BinaryOperation, Identifier, MemberExpression, UnaryOperation } from "../parser/ast";
 import { evaluateCodeBlock } from "./statements";
 import { ArrayValue, FunctionValue, NumberValue, RuntimeValue, makeBooleanValue, makeNumberValue } from "./types";
-import { truthy } from "./utils";
+import { equal, truthy } from "./utils";
 
 export function evaluateIdentifier (identifier: Identifier): RuntimeValue {
   const value = getVariable(identifier.value);
@@ -41,6 +41,14 @@ function evaluateNumericBinaryOperation (left: RuntimeValue, right: RuntimeValue
     case '%':
       result = leftNum % rightNum;
       break;
+    case '>':
+      return makeBooleanValue(leftNum > rightNum);
+    case '<':
+      return makeBooleanValue(leftNum < rightNum);
+    case '>=':
+      return makeBooleanValue(leftNum >= rightNum);
+    case '<=':
+      return makeBooleanValue(leftNum <= rightNum);
     default:
       throw new RuntimeError(`Invalid numeric operator ${op}`);
   }
@@ -67,8 +75,17 @@ export function evaluateBinaryOperation (binOp: BinaryOperation): RuntimeValue {
     case '*':
     case '/':
     case '%':
+    case '>':
+    case '<':
+    case '>=':
+    case '<=':
       return evaluateNumericBinaryOperation(left, right, binOp.operator);
     
+    case '==':
+      return makeBooleanValue(equal(left, right));
+    case '!=':
+      return makeBooleanValue(!equal(left, right));
+
     default:
       throw new RuntimeError(`Invalid operator ${binOp.operator}`);
   }

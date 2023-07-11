@@ -2,6 +2,7 @@ import { TokenType } from "./types";
 
 export const VALID_SYMBOL_CHARS = new Set<string>([
   '+', '-', '*', '/', '%',
+  '=', '<', '>',
   '!',
   '(', ')',
   '[', ']',
@@ -14,6 +15,14 @@ export const SYMBOLS: Map<string, TokenType> = new Map([
   ['*', TokenType.Operator],
   ['/', TokenType.Operator],
   ['%', TokenType.Operator],
+  
+  ['==', TokenType.Operator],
+  ['!=', TokenType.Operator],
+  ['>=', TokenType.Operator],
+  ['<=', TokenType.Operator],
+  ['>', TokenType.Operator],
+  ['<', TokenType.Operator],
+
   ['!', TokenType.Operator],
 
   ['(', TokenType.LeftParen],

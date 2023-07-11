@@ -100,11 +100,11 @@ export default class Parser {
   }
 
   private parseAssignmentExpression (): Expression {
-    const assignee = this.parseAdditiveExpression();
+    const assignee = this.parseEqualityExpression();
 
     if (this.next().type === TokenType.Equals) {
       this.consume();
-      const value = this.parseAssignmentExpression();
+      const value = this.parseEqualityExpression();
       return {
         type: 'AssignmentExpression',
         assignee,
@@ -113,6 +113,40 @@ export default class Parser {
     }
 
     return assignee;
+  }
+
+  private parseEqualityExpression(): Expression {
+    let left = this.parseComparisonExpression();
+
+    while (this.next().value === '==' || this.next().value === '!=') {
+      const operator = this.consume().value;
+      const right = this.parseComparisonExpression();
+      left = {
+        type: 'BinaryOperation',
+        left,
+        right,
+        operator,
+      } as BinaryOperation;
+    }
+
+    return left;
+  }
+
+  private parseComparisonExpression(): Expression {
+    let left = this.parseAdditiveExpression();
+
+    while (['>', '<', '<=', '>='].includes(this.next().value)) {
+      const operator = this.consume().value;
+      const right = this.parseAdditiveExpression();
+      left = {
+        type: 'BinaryOperation',
+        left,
+        right,
+        operator,
+      } as BinaryOperation;
+    }
+
+    return left;
   }
 
   private parseAdditiveExpression(): Expression {
@@ -189,15 +223,14 @@ export default class Parser {
 
   // Orders of precedence
   
-  // Assignment
-  // Logical operators
+  // DONE Assignment
   // Equality
   // Comparison
-  // Addition/Subtraction
-  // Multiplication/Division
-  // Unary operation
-  // Member access
-  // Literal
+  // DONE Addition/Subtraction
+  // DONE Multiplication/Division
+  // DONE Unary operation
+  // DONE Member access
+  // DONE Literal
 
   private parseArray (): Expression {
     this.consume();
