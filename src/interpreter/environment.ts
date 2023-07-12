@@ -1,4 +1,4 @@
-import { floor, print } from "./builtins";
+import { random, print } from "./builtins";
 import { FunctionCall, RuntimeValue, makeNativeFunction, makeNullValue } from "./types";
 
 const variables = new Map<string, RuntimeValue>();
@@ -21,5 +21,5 @@ export function setupEnvironment() {
   variables.clear();
 
   defineNativeFunction('print', print);
-  defineNativeFunction('floor', floor);
+  defineNativeFunction('random', random);
 }

@@ -21,9 +21,6 @@ export function print (): RuntimeValue {
   return makeNullValue();
 }
 
-export function floor (): RuntimeValue {
-  const value = getVariable('floor_input');
-  setVariable('floor_input', makeNullValue());
-
-  return makeNumberValue(Math.floor((value as NumberValue).value));
+export function random (): RuntimeValue {
+  return makeNumberValue(Math.random());
 }
